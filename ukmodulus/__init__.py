@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Runs the checks detailed in VocaLinks Document vocalink_-_validating_account_numbers_v3.10.pdf
-Available at http://www.vocalink.com/products/payments/customer-support-services/modulus-checking.aspx
+Runs the checks detailed in VocaLinks Document https://www.vocalink.com/media/ed0dw1yl/validating-account-numbers-uk-modulus-checking-v7-70.pdf
+Available at https://www.vocalink.com/tools/modulus-checking/
 
 TODO Currently doesn't deal with account numbers which are not 8 digits long.
 """

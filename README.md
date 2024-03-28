@@ -1,7 +1,7 @@
 UK Modulus Checking
 ===================
 
-Python implementation of the VocaLink UK Bank Account Modulus Checking logic as of the VocaLink 3.10 spec.
+Python implementation of the VocaLink UK Bank Account Modulus Checking logic as of the VocaLink 7.70 spec.
 
 Installation
 ------------
