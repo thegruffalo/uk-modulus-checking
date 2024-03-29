@@ -15,7 +15,10 @@ __license__ = 'MIT'
 import os
 import re
 from collections import namedtuple
+import logging
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 ModulusWeight = namedtuple('ModulusWeight',
                            ['range_start',
@@ -218,21 +221,28 @@ def validate_number(sort_code, account_number):
 
     weightings = _get_weightings(sort_code)
     check_count = len(weightings)
+    logger.info(f"Checks {check_count}")
     if not weightings:
+        logger.info(f"sortcode {sort_code} doesn't have any weightings")
         return True
     first_check = weightings[0]
     if _run_check(sort_code, account_number, first_check):
+        logger.info("Passed first check")
         if check_count == 1 or first_check.exception_code in ('2', '9', '10', '11', '12', '13', '14'):
             return True
+        logger.info(f"running second check")
         return _run_check(sort_code, account_number, weightings[1])
     else:
+        logger.info( f"Failed first check exception_code {first_check.exception_code}")
         if first_check.exception_code == '14':
             if account_number[7] not in '019':
                 return False
             account_number = ('0' + account_number)[:8]
+            logger.info("Rerunning check")
             return _run_check(sort_code, account_number, weightings[0])
         if check_count == 1 or first_check.exception_code not in ('2', '9', '10', '11', '12', '13', '14'):
             return False
+        logger.info(f"running second check")
         return _run_check(sort_code, account_number, weightings[1])
 
 
@@ -263,6 +273,16 @@ def _load_scsubs():
                 raise ValueError
             _sc_subs[split[0]] = split[1]
 
+try:
+    _load_weightings()
+except Exception as ex:
+    logger.exception("Unexpected exception while loading weightings")
+    error_message = str(ex)
+    raise    
 
-_load_weightings()
-_load_scsubs()
+try:
+    _load_scsubs()
+except Exception as ex:
+    logger.exception("Unexpected exception while loading sort code substitions")
+    error_message = str(ex)
+    raise    
